@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Spotify To GPM</title>
+</head>
+<body>
+<div>
+    <h1>{{ playlist.playlist_name }} Tracks</h1>
+    {% for track in tracks %}
+    <p>{{ track.track_name }}</p>
+    {% endfor %}
+</div>
+
+</body>
+</html>

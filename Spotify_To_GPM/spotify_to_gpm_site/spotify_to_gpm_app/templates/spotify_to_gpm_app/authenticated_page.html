@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h3>Logged into Spotify as {{ user.username }}</h3>
+    <h3>Logged into GPM as {{ user.username }}</h3>
+    <a href="{% url 'spotify_to_gpm_app:spotify_logout' %}">Logout Of Spotify</a>
+
+    <h1>{{ invalid }}</h1>
+
+    {% comment %}
+    <h3>Your Playlists</h3>
+    {% for playlist in playlists %}
+    <a href="{% url 'spotify_to_gpm_app:disp_pl_tracks' playlist.spotify_playlist_id %}">
+        <p>{{ playlist.playlist_name }}</p>
+    </a>
+    {% endfor %}
+    {% endcomment %}
+
+    {% else %}
+    <a href="{% url 'spotify_to_gpm_app:spotify_login' %}">Login To Spotify</a>
+    {% endif %}
+</body>
+</html>
