@@ -1,41 +1,11 @@
-from django.shortcuts import render, redirect, get_object_or_404, reverse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import logout as auth_logout
-from .models import SpotifyPlaylist, SpotifyTrack, SpotifyLibrary, GPMUser
-from django.contrib.auth.models import User
+from .models import SpotifyPlaylist, SpotifyTrack, SpotifyLibrary, GPMUser, GPMTrack, GPMLibrary
 from social_django.utils import load_strategy
 from .forms import GPMLoginForm
 import spotipy
 from gmusicapi import Mobileclient
-from django.http import HttpResponse
 
-
-# def index(request):
-#     context = {}
-#     if request.user.is_authenticated:
-#         social = request.user.social_auth.get(provider='spotify')
-#         token = social.extra_data['access_token']
-#         if token:
-#             sp = spotipy.Spotify(auth=token)
-#             curr_user = sp.current_user()
-#             playlists_json = sp.user_playlists(curr_user['id'])
-#             for playlist in playlists_json['items']:
-#                 playlist = Playlist(playlist_name=playlist['name'],
-#                                     spotify_playlist_id=playlist['id'])
-#                 if not Playlist.objects.filter(spotify_playlist_id=playlist.spotify_playlist_id).exists():
-#                     playlist.save()
-#                 else:
-#                     continue
-#                 tracks = sp.user_playlist_tracks(curr_user['id'], playlist.spotify_playlist_id)
-#                 for track in tracks['items']:
-#                     new_track = Track(track_name=track['track']['name'],
-#                                       artist_name=track['track']['album']['artists'][0]['name'],
-#                                       album_name=track['track']['album']['name'],
-#                                       spotify_track_id=track['track']['id'],
-#                                       playlist=playlist)
-#                     new_track.save()
-#         else:
-#             context = {'invalid': "Can't get token"}
-#     return render(request, 'spotify_to_gpm_app/index.html', context)
 
 gpm = None
 
@@ -112,19 +82,41 @@ def spotify_lib_to_db(request):
                                          track_id=item['track']['id'])
                 new_track.save()
 
-            track = get_object_or_404(SpotifyTrack, track_id=item['track']['id'])
+            spotify_track = get_object_or_404(SpotifyTrack, track_id=item['track']['id'])
 
-            if track not in library.spotifytrack_set.all():
-                library.spotifytrack_set.add(track)
+            if spotify_track not in library.spotifytrack_set.all():
+                library.spotifytrack_set.add(spotify_track)
 
         myoffset += 50
         if not library_json['next']:
             break
 
+    return render(request, 'spotify_to_gpm_app/homepage.html', {'spotify_done': 'spotify import done'})
 
-def spotify_lib_to_gpm(request):
-    spotify_lib_to_db(request)
-    
+
+def gpm_lib_to_db(request):
+    if not GPMLibrary.objects.filter(gpm_user=request.user.GPMUser).exists():
+        mylibrary = GPMLibrary(library_name=request.user.GPMUser.email, gpm_user=request.user.GPMUser)
+        mylibrary.save()
+    library = get_object_or_404(GPMLibrary, gpm_user=request.user.GPMUser)
+
+    global gpm
+    gpm_tracks = gpm.get_all_songs()
+    for track in gpm_tracks:
+        if not GPMTrack.objects.filter(store_id=track['storeId']).exists():
+            new_gpm_track = GPMTrack(track_name=track['title'],
+                                     artist_name=track['artist'],
+                                     album_name=track['album'],
+                                     store_id=track['storeId'])
+            new_gpm_track.save()
+
+        gpm_track = get_object_or_404(GPMTrack, store_id=track['storeId'])
+
+        if gpm_track not in library.gpmtrack_set.all():
+            library.gpmtrack_set.add(gpm_track)
+
+    return render(request, 'spotify_to_gpm_app/homepage.html',
+                  {'gpm_done': 'gpm import done'})
 
 
 def index(request):
