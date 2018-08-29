@@ -6,8 +6,14 @@ from .forms import GPMLoginForm
 import spotipy
 from gmusicapi import Mobileclient
 
-
 gpm = None
+
+
+def index(request):
+    if not request.user.is_authenticated:
+        return render(request, 'spotify_to_gpm_app/spotify_login.html')
+    else:
+        return render(request, 'spotify_to_gpm_app/gpm_login.html')
 
 
 def gpm_login(request):
@@ -24,7 +30,8 @@ def gpm_login(request):
                 if not GPMUser.objects.filter(spotify_user=request.user).exists():
                     new_gpm_user = GPMUser(spotify_user=request.user, email=email, password=password)
                     new_gpm_user.save()
-                return render(request, 'spotify_to_gpm_app/homepage.html')
+                # return render(request, 'spotify_to_gpm_app/homepage.html')
+                return render(request, 'spotify_to_gpm_app/main.html')
             else:
                 form = GPMLoginForm()
                 return render(request, 'spotify_to_gpm_app/gpm_login.html', {'failed': 'GPM Login Failed. Try again.', 'form': form})
@@ -91,7 +98,7 @@ def spotify_lib_to_db(request):
         if not library_json['next']:
             break
 
-    return render(request, 'spotify_to_gpm_app/homepage.html', {'spotify_done': 'spotify import done'})
+    return render(request, 'spotify_to_gpm_app/homepage.html')
 
 
 def gpm_lib_to_db(request):
@@ -115,29 +122,31 @@ def gpm_lib_to_db(request):
         if gpm_track not in library.gpmtrack_set.all():
             library.gpmtrack_set.add(gpm_track)
 
-    return render(request, 'spotify_to_gpm_app/homepage.html',
-                  {'gpm_done': 'gpm import done'})
+    return render(request, 'spotify_to_gpm_app/homepage.html')
 
 
-def index(request):
-    if not request.user.is_authenticated:
-        return render(request, 'spotify_to_gpm_app/spotify_login.html')
-    else:
-        return render(request, 'spotify_to_gpm_app/gpm_login.html')
-
-
-def homepage(request):
+def search_gpm(track_name, artist_name, album_name):
     pass
-    # sp, curr_spotify_user = get_spotify_user(request)
-    # if sp and curr_spotify_user:
-    #     # import_spotify_pl(sp, curr_spotify_user)
-    #     # import_spotify_pl_tracks(sp, curr_spotify_user)
-    #     # context['spotify_playlists'] = Playlist.objects.filter(user_id=curr_spotify_user['id'])
-    #     # context['spotify_library'] = SpotifyLibrary.objects.filter(
-    #     #     user_id=curr_spotify_user['id'])
-    #     import_spotify_library(sp, curr_spotify_user)
-    # else:
-    #     context['invalid'] = 'Could not get OAuth token'
+
+
+def spotify_to_gpm(request):
+    sp = get_spotify_user(request)
+    myoffset = 0
+    while True:
+        library_json = sp.current_user_saved_tracks(limit=50, offset=myoffset)
+        for item in library_json['items']:
+            track_name = item['track']['name']
+            artist_name = item['track']['album']['artists'][0]['name']
+            album_name = item['track']['album']['name']
+            track_id = item['track']['id']
+
+            search_gpm(track_name, artist_name, album_name)
+
+        myoffset += 50
+        if not library_json['next']:
+            break
+
+    return render(request, 'spotify_to_gpm_app/homepage.html')
 
 
 # # store the current user's Spotify playlist info into the database

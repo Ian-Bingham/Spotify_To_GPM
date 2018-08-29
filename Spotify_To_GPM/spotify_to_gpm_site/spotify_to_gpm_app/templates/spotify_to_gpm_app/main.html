@@ -9,9 +9,6 @@
     <h3>Logged into GPM as {{ user.GPMUser.email }}</h3>
     <p> <a href="{% url 'spotify_to_gpm_app:logout_both' %}">Logout Of Spotify and GPM</a> </p>
 
-    <p> <a href="{% url 'spotify_to_gpm_app:spotify_lib_to_db' %}">Import Spotify To Database</a> </p>
-    <p> <a href="{% url 'spotify_to_gpm_app:gpm_lib_to_db' %}">Import GPM To Database</a> </p>
-
     <p> <a href="{% url 'spotify_to_gpm_app:spotify_to_gpm' %}">Import Spotify To GPM</a> </p>
 
     {% comment %}
