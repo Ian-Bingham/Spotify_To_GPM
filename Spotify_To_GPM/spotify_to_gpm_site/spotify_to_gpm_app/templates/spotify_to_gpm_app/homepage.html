@@ -6,10 +6,10 @@
 </head>
 <body>
     <h3>Logged into Spotify as {{ user.username }}</h3>
-    <h3>Logged into GPM as {{ user.username }}</h3>
-    <a href="{% url 'spotify_to_gpm_app:spotify_logout' %}">Logout Of Spotify</a>
-
-    <h1>{{ invalid }}</h1>
+    <h3>Logged into GPM as {{ user.GPMUser.email }}</h3>
+    <p> <a href="{% url 'spotify_to_gpm_app:logout_both' %}">Logout Of Spotify and GPM</a> </p>
+    <p> <a href="{% url 'spotify_to_gpm_app:spotify_lib_to_gpm' %}">Import Spotify Library To GPM</a> </p>
+    {{ done }}
 
     {% comment %}
     <h3>Your Playlists</h3>
@@ -20,8 +20,5 @@
     {% endfor %}
     {% endcomment %}
 
-    {% else %}
-    <a href="{% url 'spotify_to_gpm_app:spotify_login' %}">Login To Spotify</a>
-    {% endif %}
 </body>
 </html>

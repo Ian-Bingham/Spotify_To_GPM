@@ -7,19 +7,16 @@
 <body>
 <div>
     <h1>Spotify To GPM</h1>
-    {{ login }}
-    {{ failed }}
+    <h2>Please sign into Spotify first, then into Google Play Music</h2>
     <a href="{% url 'spotify_to_gpm_app:spotify_login' %}">Login To Spotify</a>
-    <a href="{% url 'spotify_to_gpm_app:gpm_login' %}">Login To GPM</a>
 
+    {% comment %}
     {%  if user.is_authenticated %}
         <h3>Logged into Spotify as {{ user.username }}</h3>
         <a href="{% url 'spotify_to_gpm_app:spotify_logout' %}">Logout Of Spotify</a>
     {%  endif %}
-    {%  if gpm_isLoggedIn %}
-        <h3>Logged Into GPM</h3>
-        <a href="{% url 'spotify_to_gpm_app:spotify_logout' %}">Logout Of Spotify</a>
-    {%  endif %}
+    {% endcomment %}
+
 </div>
 
 </body>

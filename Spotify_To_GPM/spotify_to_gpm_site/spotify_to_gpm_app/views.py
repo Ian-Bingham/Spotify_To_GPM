@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.contrib.auth.views import logout as auth_logout
-from .models import SpotifyPlaylist, SpotifyTrack, SpotifyLibrary
+from .models import SpotifyPlaylist, SpotifyTrack, SpotifyLibrary, GPMUser
+from django.contrib.auth.models import User
 from social_django.utils import load_strategy
 from .forms import GPMLoginForm
 import spotipy
@@ -36,6 +37,8 @@ from django.http import HttpResponse
 #             context = {'invalid': "Can't get token"}
 #     return render(request, 'spotify_to_gpm_app/index.html', context)
 
+gpm = None
+
 
 def gpm_login(request):
     if request.method == 'POST':
@@ -43,23 +46,27 @@ def gpm_login(request):
         if form.is_valid():
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
+
+            global gpm
             gpm = Mobileclient()
             gpm_loggedIn = gpm.login(email, password, Mobileclient.FROM_MAC_ADDRESS)
             if gpm_loggedIn:
-                context = {'gpm': gpm, 'gpm_loggedIn': gpm_loggedIn}
-                return redirect('spotify_to_gpm_app:index', context)
+                if not GPMUser.objects.filter(spotify_user=request.user).exists():
+                    new_gpm_user = GPMUser(spotify_user=request.user, email=email, password=password)
+                    new_gpm_user.save()
+                return render(request, 'spotify_to_gpm_app/homepage.html')
             else:
-                return render(request, 'spotify_to_gpm_app/index.html', {'failed': 'GPM Login Failed.'})
+                form = GPMLoginForm()
+                return render(request, 'spotify_to_gpm_app/gpm_login.html', {'failed': 'GPM Login Failed. Try again.', 'form': form})
         # if the form is invalid, we just send it back to the template
     else:
         form = GPMLoginForm()
     return render(request, 'spotify_to_gpm_app/gpm_login.html', {'form': form})
 
 
-def gpm_logout(request):
-    auth_logout(request)
-    # Redirect to a success page.
-    return redirect('/capstone/')
+def gpm_logout():
+    global gpm
+    gpm.logout()
 
 
 def spotify_login(request):
@@ -69,7 +76,12 @@ def spotify_login(request):
 
 def spotify_logout(request):
     auth_logout(request)
-    # Redirect to a success page.
+    return redirect('/capstone/')
+
+
+def logout_both(request):
+    gpm_logout()
+    auth_logout(request)
     return redirect('/capstone/')
 
 
@@ -78,21 +90,16 @@ def get_spotify_user(request):
     social = request.user.social_auth.get(provider='spotify')
     social.refresh_token(load_strategy())
     token = social.extra_data['access_token']
-    if token:
-        sp = spotipy.Spotify(auth=token)
-        curr_user = sp.current_user()
-    else:
-        sp = None
-        curr_user = None
-    return sp, curr_user
+    sp = spotipy.Spotify(auth=token)
+    return sp
 
 
-def import_spotify_library(sp, curr_user):
-    lib_name = f"{curr_user['id']}'s Spotify Library"
-    mylibrary = SpotifyLibrary(library_name=lib_name, user_id=curr_user['id'])
-    if not SpotifyLibrary.objects.filter(user_id=mylibrary.user_id).exists():
+def spotify_lib_to_db(request):
+    sp = get_spotify_user(request)
+    if not SpotifyLibrary.objects.filter(spotify_user=request.user).exists():
+        mylibrary = SpotifyLibrary(library_name=request.user.username, spotify_user=request.user)
         mylibrary.save()
-    library = get_object_or_404(SpotifyLibrary, user_id=mylibrary.user_id)
+    library = get_object_or_404(SpotifyLibrary, spotify_user=request.user)
 
     myoffset = 0
     while True:
@@ -114,21 +121,21 @@ def import_spotify_library(sp, curr_user):
         if not library_json['next']:
             break
 
-    return 'Done'
+
+def spotify_lib_to_gpm(request):
+    spotify_lib_to_db(request)
+    
 
 
-def index(request, gpmDict={'gpm_isLoggedIn': False}):
-    if request.user.is_authenticated and gpmDict['gpm_isLoggedIn']:
-        return redirect('spotify_to_gpm_app/authenticated_page.html')
+def index(request):
+    if not request.user.is_authenticated:
+        return render(request, 'spotify_to_gpm_app/spotify_login.html')
     else:
-        context = {'login': 'Please login to both platforms.'}
-        if gpmDict['gpm_isLoggedIn']:
-            context['gpm_isLoggedIn'] = True
-        return render(request, 'spotify_to_gpm_app/index.html', context)
+        return render(request, 'spotify_to_gpm_app/gpm_login.html')
 
 
-def authenticated_page(request):
-    return HttpResponse('ok')
+def homepage(request):
+    pass
     # sp, curr_spotify_user = get_spotify_user(request)
     # if sp and curr_spotify_user:
     #     # import_spotify_pl(sp, curr_spotify_user)
