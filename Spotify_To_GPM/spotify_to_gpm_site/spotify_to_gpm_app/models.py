@@ -33,7 +33,7 @@ class GPMTrack(models.Model):
     artist_name = models.CharField(max_length=100)
     album_name = models.CharField(max_length=100)
     store_id = models.CharField(max_length=100)
-    playlist = models.ForeignKey(GPMPlaylist, on_delete=models.CASCADE, null=True, blank=True)
+    # playlist = models.ForeignKey(GPMPlaylist, on_delete=models.CASCADE, null=True, blank=True)
     library = models.ForeignKey(GPMLibrary, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
@@ -62,7 +62,7 @@ class SpotifyTrack(models.Model):
     artist_name = models.CharField(max_length=100)
     album_name = models.CharField(max_length=100)
     track_id = models.CharField(max_length=100)
-    playlist = models.ForeignKey(SpotifyPlaylist, on_delete=models.CASCADE, null=True, blank=True)
+    # playlist = models.ForeignKey(SpotifyPlaylist, on_delete=models.CASCADE, null=True, blank=True)
     library = models.ForeignKey(SpotifyLibrary, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):

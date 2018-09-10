@@ -5,14 +5,28 @@
     <title>Title</title>
 </head>
 <body>
-    <h3>Logged into Spotify as {{ user.username }}</h3>
-    <h3>Logged into GPM as {{ user.GPMUser.email }}</h3>
+    <h1>Logged into Spotify as {{ user.username }}</h1>
+    <h1>Logged into GPM as {{ user.GPMUser.email }}</h1>
     <p> <a href="{% url 'spotify_to_gpm_app:logout_both' %}">Logout Of Spotify and GPM</a> </p>
 
     <p> <a href="{% url 'spotify_to_gpm_app:spotify_lib_to_db' %}">Import Spotify To Database</a> </p>
     <p> <a href="{% url 'spotify_to_gpm_app:gpm_lib_to_db' %}">Import GPM To Database</a> </p>
 
-    <p> <a href="{% url 'spotify_to_gpm_app:spotify_to_gpm' %}">Import Spotify To GPM</a> </p>
+    <p> <a href="{% url 'spotify_to_gpm_app:gpm_to_spotify' %}">Import GPM To Spotify</a> </p>
+
+    {% if spotify_added %}
+        <h3>The following {{ spotify_count }} songs were added to your Spotify Library:</h3>
+        {% for song_name in spotify_added %}
+            <p>{{ song_name }} was added to your Spotify Library</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if spotify_not_found %}
+        <h3>The following songs could not be found in Spotify:</h3>
+        {% for song_name in spotify_not_found %}
+            <p>{{ song_name }} was not found in Spotify</p>
+        {% endfor %}
+    {% endif %}
 
     {% comment %}
     <h3>Your Playlists</h3>
