@@ -156,7 +156,8 @@ def gpm_to_spotify(request):
             cleaned_searched_name = ''.join(e for e in item['name'] if e.isalnum())
             # check the search results track names against the GPM track name (excluding special chars)
             # if the names match, then we found the song we want to add
-            if cleaned_gpm_track_name.lower() == cleaned_searched_name.lower():
+            if cleaned_gpm_track_name.lower() in cleaned_searched_name.lower() or \
+                cleaned_searched_name.lower() in cleaned_gpm_track_name.lower():
                 song_found = True
                 # check if the GPM track already exists in the Spotify Library
                 # if not, add it
