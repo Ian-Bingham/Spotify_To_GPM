@@ -6,36 +6,41 @@
 </head>
 <body>
     <h1>Logged into Spotify as {{ user.username }}</h1>
+    <p> <a href="{% url 'spotify_to_gpm_app:spotify_logout' %}">Logout Of Spotify</a> </p>
+
     <h1>Logged into GPM as {{ user.GPMUser.email }}</h1>
-    <p> <a href="{% url 'spotify_to_gpm_app:logout_both' %}">Logout Of Spotify and GPM</a> </p>
+    <p> <a href="{% url 'spotify_to_gpm_app:gpm_logout' %}">Logout Of GPM</a> </p>
 
     <p> <a href="{% url 'spotify_to_gpm_app:spotify_lib_to_db' %}">Import Spotify To Database</a> </p>
     <p> <a href="{% url 'spotify_to_gpm_app:gpm_lib_to_db' %}">Import GPM To Database</a> </p>
 
     <p> <a href="{% url 'spotify_to_gpm_app:gpm_to_spotify' %}">Import GPM To Spotify</a> </p>
+    <p> <a href="{% url 'spotify_to_gpm_app:spotify_to_gpm' %}">Import Spotify To GPM</a> </p>
 
-    {% if spotify_added %}
-        <h3>The following {{ spotify_count }} songs were added to your Spotify Library:</h3>
-        {% for song_name in spotify_added %}
-            <p>{{ song_name }} was added to your Spotify Library</p>
+    {% if spotify_tracks_added %}
+        <h3>The following {{ spotify_tracks_added|length }} songs were added to your Spotify Library:</h3>
+        {% for track in spotify_tracks_added %}
+            <p>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</p>
         {% endfor %}
     {% endif %}
 
-    {% if spotify_not_found %}
-        <h3>The following songs could not be found in Spotify:</h3>
-        {% for song_name in spotify_not_found %}
-            <p>{{ song_name }} was not found in Spotify</p>
+    {% if spotify_tracks_not_added %}
+        <h3>The following {{ spotify_tracks_not_added|length }} songs could not be added to your Spotify Library:</h3>
+        {% for track in spotify_tracks_not_added %}
+            <p>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</p>
         {% endfor %}
     {% endif %}
 
-    {% comment %}
-    <h3>Your Playlists</h3>
-    {% for playlist in playlists %}
-    <a href="{% url 'spotify_to_gpm_app:disp_pl_tracks' playlist.spotify_playlist_id %}">
-        <p>{{ playlist.playlist_name }}</p>
-    </a>
-    {% endfor %}
-    {% endcomment %}
+{#    {% for track in spotify_tracks %}#}
+{#        <p>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</p>#}
+{#    {% endfor %}#}
+{##}
+{#    {% if spotify_tracks_not_added_count %}#}
+{#        <h3>The following {{ spotify_tracks_not_added_count }} songs could not be added:</h3>#}
+{#        {% for track in spotify_tracks_not_found %}#}
+{#            <p>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</p>#}
+{#        {% endfor %}#}
+{#    {% endif %}#}
 
 </body>
 </html>
