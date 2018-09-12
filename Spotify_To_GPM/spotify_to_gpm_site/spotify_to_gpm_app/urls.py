@@ -8,7 +8,6 @@ urlpatterns = [
     path('spotify_logout/', views.spotify_logout, name='spotify_logout'),
     path('gpm_login/', views.gpm_login, name='gpm_login'),
     path('gpm_logout/', views.gpm_logout, name='gpm_logout'),
-    path('logout_both/', views.logout_both, name='logout_both'),
     path('spotify_lib_to_db/', views.spotify_lib_to_db, name='spotify_lib_to_db'),
     path('gpm_lib_to_db/', views.gpm_lib_to_db, name='gpm_lib_to_db'),
     path('gpm_to_spotify/', views.gpm_to_spotify, name='gpm_to_spotify'),
