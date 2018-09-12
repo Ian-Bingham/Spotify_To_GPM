@@ -31,16 +31,19 @@
         {% endfor %}
     {% endif %}
 
-{#    {% for track in spotify_tracks %}#}
-{#        <p>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</p>#}
-{#    {% endfor %}#}
-{##}
-{#    {% if spotify_tracks_not_added_count %}#}
-{#        <h3>The following {{ spotify_tracks_not_added_count }} songs could not be added:</h3>#}
-{#        {% for track in spotify_tracks_not_found %}#}
-{#            <p>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</p>#}
-{#        {% endfor %}#}
-{#    {% endif %}#}
+    {% if gpm_tracks_added %}
+        <h3>The following {{ gpm_tracks_added|length }} songs were added to your GPM Library:</h3>
+        {% for track in gpm_tracks_added %}
+            <p>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if gpm_tracks_not_added %}
+        <h3>The following {{ gpm_tracks_not_added|length }} songs could not be added to your GPM Library:</h3>
+        {% for track in gpm_tracks_not_added %}
+            <p>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</p>
+        {% endfor %}
+    {% endif %}
 
 </body>
 </html>

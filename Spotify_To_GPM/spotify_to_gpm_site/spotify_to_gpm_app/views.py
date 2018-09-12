@@ -146,106 +146,75 @@ def gpm_to_spotify(request):
     spotify_tracks_not_added = []
 
     # go through all of the GPM tracks
-    for track in gpm_tracks[:100]:
+    for track in gpm_tracks:
         song_found = False
         # search Spotify for the GPM track
         q = f"{track.track_name} artist:{track.artist_name} album:{track.album_name}"
-        search_results = sp.search(q, limit=20)['tracks']['items']
-        cleaned_gpm_track_name = ''.join(e for e in track.track_name if e.isalnum())
-        for item in search_results:
-            cleaned_searched_name = ''.join(e for e in item['name'] if e.isalnum())
-            # check the search results track names against the GPM track name (excluding special chars)
-            # if the names match, then we found the song we want to add
-            if cleaned_gpm_track_name.lower() in cleaned_searched_name.lower() or \
-                cleaned_searched_name.lower() in cleaned_gpm_track_name.lower():
-                song_found = True
-                # check if the GPM track already exists in the Spotify Library
-                # if not, add it
-                if not SpotifyTrack.objects.filter(track_id=item['id']).exists():
-                    sp.current_user_saved_tracks_add([item['id']])
-                    spotify_tracks_added.append(track)
-                    break
+        search_results = sp.search(q, limit=50)['tracks']['items']
+        if not search_results:
+            spotify_tracks_not_added.append(track)
+        else:
+            cleaned_gpm_track_name = ''.join(e for e in track.track_name if e.isalnum())
+            for item in search_results:
+                cleaned_searched_name = ''.join(e for e in item['name'] if e.isalnum())
+                # check the search results track names against the GPM track name (excluding special chars)
+                # if the names match, then we found the song we want to add
+                if cleaned_gpm_track_name.lower() in cleaned_searched_name.lower() or \
+                        cleaned_searched_name.lower() in cleaned_gpm_track_name.lower():
+                    song_found = True
+                    # check if the GPM track already exists in the Spotify Library
+                    # if not, add it
+                    if not SpotifyTrack.objects.filter(track_id=item['id']).exists():
+                        sp.current_user_saved_tracks_add([item['id']])
+                        spotify_tracks_added.append(track)
+                        break
 
-            if not song_found and (search_results.index(item) == len(search_results) - 1):
-                spotify_tracks_not_added.append(track)
+                if not song_found and (search_results.index(item) == len(search_results) - 1):
+                    spotify_tracks_not_added.append(track)
 
     return render(request, 'spotify_to_gpm_app/homepage.html', {'spotify_tracks_added': spotify_tracks_added,
                                                                 'spotify_tracks_not_added': spotify_tracks_not_added,})
 
-# ###### NOT WORKING ERROR 502 ######
-# def gpm_to_spotify(request):
-#     sp = get_spotify_user(request)
-#     gpm_lib = get_object_or_404(GPMLibrary, gpm_user=request.user.GPMUser)
-#     gpm_tracks = GPMTrack.objects.filter(library=gpm_lib)
-#     spotify_tracks_added = []
-#     spotify_tracks_not_added = []
-#
-#     # go through all of the GPM tracks
-#     for track in gpm_tracks[5:9]:
-#         # search Spotify for the GPM track
-#         q = f"{track.track_name} artist:{track.artist_name} album:{track.album_name}"
-#         search_result = sp.search(q, limit=5)['tracks']['items']
-#         print(search_result)
-#         # only keep letters and numbers
-#         # if search_result:
-#         #     cleaned_gpm_name = ''.join(e for e in track.track_name if e.isalnum())
-#         #     cleaned_searched_name = ''.join(e for e in search_result[0]['name'] if e.isalnum())
-#         #     if cleaned_gpm_name.lower() == cleaned_searched_name.lower():
-#         #         # check if the song already exists in the Spotify Library, if not add it
-#         #         if not SpotifyTrack.objects.filter(track_id=search_result[0]['id']).exists():
-#         #             sp.current_user_saved_tracks_add([search_result[0]['id']])
-#         #             spotify_tracks_added.append(track)
-#         #     else:
-#         #         spotify_tracks_not_added.append(track)
-#         # else:
-#         #     spotify_tracks_not_added.append(track)
-#
-#     return render(request, 'spotify_to_gpm_app/homepage.html', {'spotify_tracks_added': spotify_tracks_added,
-#                                                                 'spotify_tracks_not_added': spotify_tracks_not_added,})
-
 
 def spotify_to_gpm(request):
-    return HttpResponse('ok')
-#     spotify_lib = get_object_or_404(SpotifyLibrary, spotify_user=request.user)
-#     spotify_tracks = SpotifyTrack.objects.filter(library=spotify_lib)
-#     gpm_tracks_not_added_count = 0
-#     gpm_tracks_not_found = []
-#
-#     # for track in spotify_tracks[:3]:
-#     #     q = f"{track.track_name} {track.artist_name} {track.album_name}"
-#     #     global gpm
-#     #     searched_list = gpm.search(q, max_results=1)
-#     #     cleaned_spotify_name = ''.join(e for e in track.track_name if e.isalnum())
-#     #     cleaned_searched_name = ''.join(e for e in searched_list['song_hits']['track']['title'] if e.isalnum())
-#     #     if cleaned_spotify_name.lower() == cleaned_searched_name.lower():
-#     #         if not GPMTrack.objects.filter(store_id=searched_list['song_hits']['track']['storeId']).exists():
-#     #             gpm.add_store_track(searched_list['song_hits']['track']['storeId'])
-#     #     else:
-#     #         gpm_tracks_not_found.append(track)
-#     #         gpm_tracks_not_added_count += 1
-#
-#     return render(request, 'spotify_to_gpm_app/homepage.html', {'gpm_tracks_not_found': gpm_tracks_not_found,
-#                                                                 'gpm_tracks_not_added_count': gpm_tracks_not_added_count,})
+    spotify_lib = get_object_or_404(SpotifyLibrary, spotify_user=request.user)
+    spotify_tracks = SpotifyTrack.objects.filter(library=spotify_lib)
+    gpm_track_ids = []
+    gpm_tracks_added = []
+    gpm_tracks_not_added = []
 
+    for track in spotify_tracks:
+        song_found = False
+        q = f"{track.track_name} {track.artist_name} {track.album_name}"
+        global gpm
+        # search_results = gpm.search(q, max_results=50)
+        search_results = gpm.search(q, max_results=50)['song_hits']
+        if not search_results:
+            gpm_tracks_not_added.append(track)
+        else:
+            cleaned_spotify_name = ''.join( e for e in track.track_name if e.isalnum())
+            for song in search_results:
+                cleaned_searched_name = ''.join(e for e in song['track']['title'] if e.isalnum())
+                if cleaned_spotify_name.lower() in cleaned_searched_name.lower() or \
+                        cleaned_searched_name.lower() in cleaned_spotify_name.lower():
+                    song_found = True
+                    if not GPMTrack.objects.filter(store_id=song['track']['storeId']).exists():
+                        # gpm_track_ids.append(song['track']['storeId'])
+                        # gpm_tracks_added.append(track)
+                        # if len(gpm_track_ids) == 500:
+                        #     gpm.add_store_tracks(gpm_track_ids)
+                        #     gpm_track_ids = []
+                        gpm.add_store_track(song['track']['storeId'])
+                        gpm_tracks_added.append(track)
+                        break
 
-# def spotify_to_gpm(request):
-#     sp = get_spotify_user(request)
-#     myoffset = 0
-#     while True:
-#         library_json = sp.current_user_saved_tracks(limit=50, offset=myoffset)
-#         for item in library_json['items']:
-#             track_name = item['track']['name']
-#             artist_name = item['track']['album']['artists'][0]['name']
-#             album_name = item['track']['album']['name']
-#             track_id = item['track']['id']
-#
-#             search_gpm(track_name, artist_name, album_name)
-#
-#         myoffset += 50
-#         if not library_json['next']:
-#             break
-#
-#     return render(request, 'spotify_to_gpm_app/homepage.html')
+                if not song_found and (search_results.index(song) == len(search_results) - 1):
+                    gpm_tracks_not_added.append(track)
+
+    # gpm.add_store_tracks(gpm_track_ids)
+
+    return render(request, 'spotify_to_gpm_app/homepage.html', {'gpm_tracks_added': gpm_tracks_added,
+                                                                'gpm_tracks_not_added': gpm_tracks_not_added,})
 
 
 # # store the current user's Spotify playlist info into the database
