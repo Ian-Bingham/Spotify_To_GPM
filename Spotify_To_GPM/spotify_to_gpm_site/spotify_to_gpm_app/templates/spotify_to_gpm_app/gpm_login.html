@@ -10,13 +10,13 @@
     <a href="{% url 'spotify_to_gpm_app:spotify_logout' %}">Logout Of Spotify</a>
 
     <h1>Login To GPM</h1>
-    <p> Note: Do not try to sign into GPM with your regular Google email and password.
+    <h3> Note: Do not try to sign into GPM with your regular Google email and password.
         To use this application you must
         <a href="https://myaccount.google.com/signinoptions/two-step-verification/enroll-welcome" target="_blank">turn on 2-Step Verification,</a>
         then <a href="https://support.google.com/mail/answer/185833?hl=en" target="_blank">create an App Password.</a>
         Once completed please sign into this form with your Google email and your newly created
         App Password.
-    </p>
+    </h3>
 
     {{ failed }}
     <form method="post" action="{% url 'spotify_to_gpm_app:gpm_login' %}">

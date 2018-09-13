@@ -5,6 +5,7 @@ from .models import SpotifyPlaylist, SpotifyTrack, SpotifyLibrary, GPMUser, GPMT
 class SpotifyTrackAdmin(admin.ModelAdmin):
     list_filter = ["library"]
     search_fields = ('track_name', 'artist_name', 'album_name', 'track_id')
+    list_display = ('track_name', 'artist_name', 'album_name', 'track_id')
 
     class Meta:
         model = SpotifyTrack
@@ -13,6 +14,7 @@ class SpotifyTrackAdmin(admin.ModelAdmin):
 class GPMTrackAdmin(admin.ModelAdmin):
     list_filter = ["library"]
     search_fields = ('track_name', 'artist_name', 'album_name', 'store_id')
+    list_display = ('track_name', 'artist_name', 'album_name', 'store_id')
 
     class Meta:
         model = GPMTrack
