@@ -14,7 +14,7 @@ gpm = None
 # prompt the user to login to Spotify and GPM
 def index(request):
     if not request.user.is_authenticated:
-        return render(request, 'spotify_to_gpm_app/spotify_login.html')
+        return render(request, 'spotify_to_gpm_app/login_page.html')
     else:
         return redirect(reverse('spotify_to_gpm_app:gpm_login'))
 
@@ -38,10 +38,10 @@ def gpm_login(request):
                 return render(request, 'spotify_to_gpm_app/homepage.html')
             else:  # if login not successful, tell the user to fill out the form again
                 form = GPMLoginForm()
-                return render(request, 'spotify_to_gpm_app/gpm_login.html', {'failed': 'GPM Login Failed. Try again.', 'form': form})
+                return render(request, 'spotify_to_gpm_app/login_page.html', {'failed': 'GPM Login Failed. Try again.', 'form': form})
     else:  # if form is invalid, send it back to the template
         form = GPMLoginForm()
-    return render(request, 'spotify_to_gpm_app/gpm_login.html', {'form': form})
+    return render(request, 'spotify_to_gpm_app/login_page.html', {'form': form})
 
 
 # delete GPM Library, then log out the user
@@ -109,7 +109,8 @@ def spotify_lib_to_db(request):
         if not library_json['next']:
             break
 
-    return render(request, 'spotify_to_gpm_app/homepage.html')
+    # return render(request, 'spotify_to_gpm_app/homepage.html')
+    return library
 
 
 # save the user's songs in their GPM Library to the database
@@ -137,7 +138,19 @@ def gpm_lib_to_db(request):
         if gpm_track not in library.gpmtrack_set.all():
             library.gpmtrack_set.add(gpm_track)
 
-    return render(request, 'spotify_to_gpm_app/homepage.html')
+    # return render(request, 'spotify_to_gpm_app/homepage.html')
+    return library
+
+
+def import_songs_to_db(request):
+    spotify_lib = spotify_lib_to_db(request)
+    gpm_lib = gpm_lib_to_db(request)
+    # spotify_lib = SpotifyLibrary.objects.get(spotify_user=request.user)
+    # gpm_lib = GPMLibrary.objects.get(gpm_user=request.user.GPMUser)
+    spotify_tracks = SpotifyTrack.objects.filter(library=spotify_lib)
+    gpm_tracks = GPMTrack.objects.filter(library=gpm_lib)
+    return render(request, 'spotify_to_gpm_app/homepage.html', {'spotify_tracks': spotify_tracks,
+                                                                'gpm_tracks': gpm_tracks,})
 
 
 ########## WORKING ##########

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <title>Login To GPM</title>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'spotify_to_gpm_app/css/style.css' %}">
+</head>
+<body class="gpm_login_wrap">
+<div>
+    {% if not user.is_authenticated %}
+        <h1 class="spotify_green_header">Login To Spotify</h1>
+        <p><a class="login_out"
+           href="{% url 'spotify_to_gpm_app:spotify_login' %}">Login To
+            Spotify</a></p>
+
+        <span class="side_note">
+            Note: If you have previously logged in to Spotify via this application
+            but want to sign in as a different Spotify user, then you must reopen this
+            application in a New Incognito Window.
+        </span>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <h1 class="spotify_green_header">Logged Into Spotify
+            as {{ user.username }}</h1>
+        <a class="login_out"
+           href="{% url 'spotify_to_gpm_app:spotify_logout' %}">Logout Of
+            Spotify</a>
+
+        <h1 class="gpm_red_header">Login To GPM</h1>
+        <span class="side_note"> Note: Do not try to sign into GPM with your regular Google email and password.
+            To use this application you must
+            <a href="https://myaccount.google.com/signinoptions/two-step-verification/enroll-welcome"
+               target="_blank">turn on 2-Step Verification,</a>
+            then <a href="https://support.google.com/mail/answer/185833?hl=en"
+                    target="_blank">create an App Password.</a>
+            Once completed please sign into this form with your Google email and your newly created
+            App Password.
+        </span>
+
+        {{ failed }}
+        <div class="form_wrap">
+            <form method="post"
+                  action="{% url 'spotify_to_gpm_app:gpm_login' %}">
+                {% csrf_token %}
+                {{ form }}
+                <div>
+                    <input class="login_out" type="submit" value="Login"/>
+                    <input type="hidden" name="next" value="{{ next }}"/>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

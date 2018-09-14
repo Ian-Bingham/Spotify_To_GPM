@@ -1,49 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'spotify_to_gpm_app/css/style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <h1>Logged into Spotify as {{ user.username }}</h1>
-    <p> <a href="{% url 'spotify_to_gpm_app:spotify_logout' %}">Logout Of Spotify</a> </p>
+<div class="overall_wrapper">
+    <header class="import_links">
+        <h1>Welcome to Spotify To GPM!!!</h1>
+        {#    <p> <a href="{% url 'spotify_to_gpm_app:spotify_lib_to_db' %}">Import Spotify To Database</a> </p>#}
+        {#    <p> <a href="{% url 'spotify_to_gpm_app:gpm_lib_to_db' %}">Import GPM To Database</a> </p>#}
+{#        <p><a href="{% url 'spotify_to_gpm_app:import_songs_to_db' %}">Import#}
+{#            Spotify and GPM Songs</a></p>#}
 
-    <h1>Logged into GPM as {{ user.GPMUser.email }}</h1>
-    <p> <a href="{% url 'spotify_to_gpm_app:gpm_logout' %}">Logout Of GPM</a> </p>
 
-    <p> <a href="{% url 'spotify_to_gpm_app:spotify_lib_to_db' %}">Import Spotify To Database</a> </p>
-    <p> <a href="{% url 'spotify_to_gpm_app:gpm_lib_to_db' %}">Import GPM To Database</a> </p>
+        <p><a href="{% url 'spotify_to_gpm_app:import_songs_to_db' %}">Import
+            songs to db!</a></p>
+    </header>
 
-    <p> <a href="{% url 'spotify_to_gpm_app:gpm_to_spotify' %}">Import GPM To Spotify</a> </p>
-    <p> <a href="{% url 'spotify_to_gpm_app:spotify_to_gpm' %}">Import Spotify To GPM</a> </p>
+    <main class="songs_tables_wrapper">
+        <div class="spotify_table">
+            <header class="spotify_header">
+                <h2>Logged into Spotify as {{ user.username }}</h2>
+                <p><a href="{% url 'spotify_to_gpm_app:spotify_logout' %}">Logout
+                    Of Spotify</a></p>
+            </header>
+            <div class="spotify_tracks">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Artist</th>
+                        <th>Album</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for track in spotify_tracks %}
+                        <tr>
+                            <td>{{ track.track_name }}</td>
+                            <td>{{ track.artist_name }}</td>
+                            <td>{{ track.album_name }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    {% if spotify_tracks_added %}
-        <h3>The following {{ spotify_tracks_added|length }} songs were added to your Spotify Library:</h3>
-        {% for track in spotify_tracks_added %}
-            <p>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</p>
-        {% endfor %}
-    {% endif %}
+        <div class="buttons">
+            <a href="{% url 'spotify_to_gpm_app:spotify_to_gpm' %}">→</a>
 
-    {% if spotify_tracks_not_added %}
-        <h3>The following {{ spotify_tracks_not_added|length }} songs could not be added to your Spotify Library:</h3>
-        {% for track in spotify_tracks_not_added %}
-            <p>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</p>
-        {% endfor %}
-    {% endif %}
+            <a href="{% url 'spotify_to_gpm_app:gpm_to_spotify' %}">←</a>
+        </div>
 
-    {% if gpm_tracks_added %}
-        <h3>The following {{ gpm_tracks_added|length }} songs were added to your GPM Library:</h3>
-        {% for track in gpm_tracks_added %}
-            <p>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</p>
-        {% endfor %}
-    {% endif %}
+        <div class="gpm_table">
+            <header class="gpm_header">
+                <h2>Logged into GPM as {{ user.GPMUser.email }}</h2>
+                <p><a href="{% url 'spotify_to_gpm_app:gpm_logout' %}">Logout Of
+                    GPM</a></p>
+            </header>
+            <div class="gpm_tracks">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Artist</th>
+                        <th>Album</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for track in gpm_tracks %}
+                        <tr>
+                            <td>{{ track.track_name }}</td>
+                            <td>{{ track.artist_name }}</td>
+                            <td>{{ track.album_name }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
 
-    {% if gpm_tracks_not_added %}
-        <h3>The following {{ gpm_tracks_not_added|length }} songs could not be added to your GPM Library:</h3>
-        {% for track in gpm_tracks_not_added %}
-            <p>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</p>
-        {% endfor %}
-    {% endif %}
+{#← #}
 
+    {#    {% if spotify_tracks_added %}#}
+    {#        <h3>The following {{ spotify_tracks_added|length }} songs were added to your Spotify Library:</h3>#}
+    {#        <ul>#}
+    {#            {% for track in spotify_tracks_added %}#}
+    {#                <li>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</li>#}
+    {#            {% endfor %}#}
+    {#        </ul>#}
+    {#    {% endif %}#}
+    {##}
+    {#    {% if spotify_tracks_not_added %}#}
+    {#        <h3>The following {{ spotify_tracks_not_added|length }} songs could not be added to your Spotify Library:</h3>#}
+    {#        <ul>#}
+    {#            {% for track in spotify_tracks_not_added %}#}
+    {#                <li>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</li>#}
+    {#            {% endfor %}#}
+    {#        </ul>#}
+    {#    {% endif %}#}
+    {##}
+    {#    {% if gpm_tracks_added %}#}
+    {#        <h3>The following {{ gpm_tracks_added|length }} songs were added to your GPM Library:</h3>#}
+    {#        <ul>#}
+    {#            {% for track in gpm_tracks_added %}#}
+    {#                <li>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</li>#}
+    {#            {% endfor %}#}
+    {#        </ul>#}
+    {#    {% endif %}#}
+    {##}
+    {#    {% if gpm_tracks_not_added %}#}
+    {#        <h3>The following {{ gpm_tracks_not_added|length }} songs could not be added to your GPM Library:</h3>#}
+    {#        <ul>#}
+    {#            {% for track in gpm_tracks_not_added %}#}
+    {#                <li>{{ track.track_name }} *** {{ track.artist_name }} *** {{ track.album_name }}</li>#}
+    {#            {% endfor %}#}
+    {#        </ul>#}
+    {#    {% endif %}#}
+</div>
 </body>
 </html>
