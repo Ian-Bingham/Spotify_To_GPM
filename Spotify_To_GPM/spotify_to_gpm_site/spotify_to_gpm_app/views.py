@@ -7,6 +7,7 @@ import spotipy
 from gmusicapi import Mobileclient
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.http import JsonResponse
 
 
 # global variable to keep track of GPM User Login
@@ -91,7 +92,7 @@ def spotify_lib_to_db(request):
 
     # go through the user's list of songs in their Spotify Library and
     # create a track model for each if it does not already exist in the database
-    myoffset = 0
+    myoffset = 600
     while True:
         library_json = sp.current_user_saved_tracks(limit=50, offset=myoffset)
         for item in library_json['items']:
@@ -156,31 +157,32 @@ def import_songs_to_db(request):
 
 
 # imports the songs from GPM and saves them into the Spotify Library
-def gpm_to_spotify(request, gpm_tracks):
-    # get all of the GPM tracks
-    # gpm_lib = get_object_or_404(GPMLibrary, gpm_user=request.user.GPMUser)
-    # gpm_tracks = GPMTrack.objects.filter(library=gpm_lib)
+@csrf_exempt
+def gpm_to_spotify(request):
     sp = get_spotify_user(request)
-    spotify_tracks_added = []
-    spotify_tracks_not_added = []
+    gpm_tracks_added = []
+    gpm_tracks_not_added = []
 
-    # search Spotify for each GPM track,
-    # add track to Spotify Library if it does not already exist
-    for track in gpm_tracks:
-        name = ''.join(e for e in track.track_name if e.isalnum() or e == " ")
-        artist = ''.join(e for e in track.artist_name if e.isalnum() or e == " ")
-        album = ''.join(e for e in track.album_name if e.isalnum() or e == " ")
-        tmp = search_spotify(request, sp, name, artist, album)
-        if tmp is not None:
-            # add the track to the Spotify Library if it does not already exist
-            if not SpotifyTrack.objects.filter(track_id=tmp).exists():
-                sp.current_user_saved_tracks_add([tmp])
-                spotify_tracks_added.append(track)
-        else:
-            spotify_tracks_not_added.append(track)
+    if request.method == 'POST':
+        gpm_track_list = request.POST.get('gpm_track_list', False)
+        gpm_track_list = json.loads(gpm_track_list)
 
-    return render(request, 'spotify_to_gpm_app/homepage.html', {'spotify_tracks_added': spotify_tracks_added,
-                                                                'spotify_tracks_not_added': spotify_tracks_not_added,})
+        # search Spotify for each GPM track,
+        # add track to Spotify Library if it does not already exist
+        for track in gpm_track_list:
+            name = ''.join(e for e in track['name'] if e.isalnum() or e == " ")
+            artist = ''.join(e for e in track['artist'] if e.isalnum() or e == " ")
+            album = ''.join(e for e in track['album'] if e.isalnum() or e == " ")
+            tmp = search_spotify(request, sp, name, artist, album)
+            if tmp is not None:
+                # add the track to the Spotify Library if it does not already exist
+                if not SpotifyTrack.objects.filter(track_id=tmp).exists():
+                    sp.current_user_saved_tracks_add([tmp])
+                    gpm_tracks_added.append(track)
+            else:
+                gpm_tracks_not_added.append(track)
+
+            return JsonResponse({'gpm_tracks_added': gpm_tracks_added, 'gpm_tracks_not_added': gpm_tracks_not_added, })
 
 
 # searches Spotify for a song with the given name, artist, and album
@@ -206,35 +208,30 @@ def search_spotify(request, sp, name, artist, album):
 # imports the songs from GPM and saves them into the Spotify Library
 @csrf_exempt
 def spotify_to_gpm(request):
-    spotify_track_list = []
-    gpm_tracks_added = []
-    gpm_tracks_not_added = []
+    spotify_tracks_added = []
+    spotify_tracks_not_added = []
 
     if request.method == 'POST':
-        # spotify_song_ids = request.POST.get('spotify_song_ids', False)
         spotify_track_list = request.POST.get('spotify_track_list', False)
         spotify_track_list = json.loads(spotify_track_list)
-        # print(spotify_track_list)
 
         # search Spotify for each GPM track,
         # add track to Spotify Library if it does not already exist
         for track in spotify_track_list:
-            # print(track)
-            tmp = search_gpm(request, track['name'], track['artist'], track['album'])
+            name = ''.join(e for e in track['name'] if e.isalnum() or e == " ")
+            artist = ''.join(e for e in track['artist'] if e.isalnum() or e == " ")
+            album = ''.join(e for e in track['album'] if e.isalnum() or e == " ")
+            tmp = search_gpm(request, name, artist, album)
             if tmp is not None:
                 # add the track to the Spotify Library if it does not already exist
                 # add the track to the GPM Library if it does not already exist
                 if not GPMTrack.objects.filter(store_id=tmp).exists():
                     gpm.add_store_track(tmp)
-                    gpm_tracks_added.append(track)
+                    spotify_tracks_added.append(track)
             else:
-                gpm_tracks_not_added.append(track)
+                spotify_tracks_not_added.append(track)
 
-        return render(request, 'spotify_to_gpm_app/homepage.html', {'gpm_tracks_added': gpm_tracks_added,
-                                                                    'gpm_tracks_not_added': gpm_tracks_not_added,})
-    else:
-        return render(request, 'spotify_to_gpm_app/homepage.html')
-
+        return JsonResponse({'spotify_tracks_added': spotify_tracks_added, 'spotify_tracks_not_added': spotify_tracks_not_added,})
 
 
 # searches Spotify for a song with the given name, artist, and album

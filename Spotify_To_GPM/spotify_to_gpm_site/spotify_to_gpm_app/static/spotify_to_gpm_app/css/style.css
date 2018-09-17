@@ -75,14 +75,14 @@ html, body {
     justify-content: space-evenly;
 }
 
-.spotify_table, .gpm_table {
+.spotify_window, .gpm_window {
     width: 45%;
     height: 70vh;
     /*box-shadow: 1px 1px 5px 1px #e6e6e6;*/
     box-shadow: 0 8px 5px 1px #dadada;
 }
 
-.spotify_table header, .gpm_table header {
+.spotify_window header, .gpm_window header {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
@@ -219,13 +219,39 @@ input.login_out {
     font-size: 0.9em;
 }
 
-#spotify_selectable .ui-selecting, #spotify_selectable .ui-selected {
+.spotify_table .ui-selecting, .spotify_table .ui-selected {
     background: #1db955;
 }
-#gpm_selectable .ui-selecting, #gpm_selectable .ui-selected {
+.gpm_table .ui-selecting, .gpm_table .ui-selected {
     background: #ff5722;
 }
 
 label {
     display: block;
+}
+
+.spotify_popup_wrapper {
+    position: fixed;
+    z-index: 1;
+    background: red;
+    color: white;
+    padding: 20px;
+
+    width: 80vw;
+    height: 80vh;
+    top: 50%;
+    left: 50%;
+}
+
+.gpm_popup_wrapper {
+    position: fixed;
+    z-index: 1;
+    background: red;
+    color: white;
+    padding: 20px;
+
+    width: 80vw;
+    height: 80vh;
+    top: 10%;
+    left: 10%;
 }

@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="44f8d3c8-8e3d-4356-b112-4a41e5a663ec" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/ian.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/spotify_to_gpm_site.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/spotify_to_gpm_site.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spotify_to_gpm_app/templates/spotify_to_gpm_app/homepage.html" beforeDir="false" afterPath="$PROJECT_DIR$/spotify_to_gpm_app/templates/spotify_to_gpm_app/homepage.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spotify_to_gpm_app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/spotify_to_gpm_app/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spotify_to_gpm_site/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/spotify_to_gpm_site/settings.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,7 +33,8 @@
           <entry key="css" value="7" />
           <entry key="gitignore" value="1" />
           <entry key="html" value="10" />
-          <entry key="js" value="2" />
+          <entry key="js" value="5" />
+          <entry key="json" value="2" />
           <entry key="pstat" value="1" />
           <entry key="py" value="35" />
         </counts>
@@ -46,7 +43,8 @@
         <counts>
           <entry key="CSS" value="7" />
           <entry key="HTML" value="10" />
-          <entry key="JavaScript" value="2" />
+          <entry key="JSON" value="2" />
+          <entry key="JavaScript" value="5" />
           <entry key="PLAIN_TEXT" value="1" />
           <entry key="Profiler Session" value="1" />
           <entry key="Python" value="35" />
@@ -54,20 +52,20 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="css" value="1243" />
+          <entry key="css" value="1382" />
           <entry key="gitignore" value="12" />
-          <entry key="html" value="3193" />
-          <entry key="js" value="1093" />
-          <entry key="py" value="10768" />
+          <entry key="html" value="3666" />
+          <entry key="js" value="1759" />
+          <entry key="py" value="10980" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="CSS" value="1243" />
-          <entry key="HTML" value="3193" />
-          <entry key="JavaScript" value="1093" />
+          <entry key="CSS" value="1382" />
+          <entry key="HTML" value="3666" />
+          <entry key="JavaScript" value="1759" />
           <entry key="PLAIN_TEXT" value="12" />
-          <entry key="Python" value="10768" />
+          <entry key="Python" value="10980" />
         </counts>
       </usages-collector>
     </session>
@@ -86,11 +84,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spotify_to_gpm_app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="69">
-              <caret line="93" column="16" lean-forward="true" selection-start-line="93" selection-start-column="16" selection-end-line="93" selection-end-column="16" />
+            <state relative-caret-position="433">
+              <caret line="184" column="12" selection-start-line="184" selection-start-column="12" selection-end-line="184" selection-end-column="12" />
               <folding>
                 <element signature="e#0#73#0" expanded="true" />
               </folding>
@@ -101,17 +99,21 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spotify_to_gpm_app/templates/spotify_to_gpm_app/homepage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="644">
-              <caret line="59" column="18" lean-forward="true" selection-start-line="59" selection-start-column="18" selection-end-line="59" selection-end-column="18" />
+            <state relative-caret-position="-1959">
+              <caret column="15" lean-forward="true" selection-start-column="15" selection-end-column="15" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/css/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4638">
-              <caret line="226" column="1" lean-forward="true" selection-start-line="226" selection-start-column="1" selection-end-line="226" selection-end-column="1" />
+            <state relative-caret-position="571">
+              <caret line="260" column="1" lean-forward="true" selection-start-line="260" selection-start-column="1" selection-end-line="260" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -119,8 +121,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/js/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-120">
-              <caret line="11" column="10" lean-forward="true" selection-start-line="6" selection-start-column="27" selection-end-line="11" selection-end-column="10" />
+            <state relative-caret-position="433">
+              <caret line="61" column="13" lean-forward="true" selection-start-line="61" selection-start-column="13" selection-end-line="61" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -146,7 +148,16 @@
       <find>_tabl</find>
       <find>text</find>
       <find>spotify_tr</find>
+      <find>spotify_sel</find>
+      <find>gpm_table</find>
+      <find>spotify_table</find>
+      <find>gpm_selectable</find>
     </findStrings>
+    <replaceStrings>
+      <replace>gpm_window</replace>
+      <replace>spotify_window</replace>
+      <replace>gpm_table</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -167,11 +178,12 @@
         <option value="$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/style.css" />
         <option value="$PROJECT_DIR$/spotify_to_gpm_app/templates/spotify_to_gpm_app/gpm_login.html" />
         <option value="$PROJECT_DIR$/spotify_to_gpm_app/templates/spotify_to_gpm_app/login_page.html" />
-        <option value="$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/css/style.css" />
         <option value="$PROJECT_DIR$/spotify_to_gpm_site/settings.py" />
-        <option value="$PROJECT_DIR$/spotify_to_gpm_app/templates/spotify_to_gpm_app/homepage.html" />
+        <option value="$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/js/multiselect.js" />
         <option value="$PROJECT_DIR$/spotify_to_gpm_app/views.py" />
+        <option value="$PROJECT_DIR$/spotify_to_gpm_app/templates/spotify_to_gpm_app/homepage.html" />
         <option value="$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/js/app.js" />
+        <option value="$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/css/style.css" />
       </list>
     </option>
   </component>
@@ -536,6 +548,9 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/js/bower.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/spotify_to_gpm_app/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="184">
@@ -546,34 +561,45 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/css/style.css">
+    <entry file="file://$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/js/multiselect.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4638">
-          <caret line="226" column="1" lean-forward="true" selection-start-line="226" selection-start-column="1" selection-end-line="226" selection-end-column="1" />
+        <state relative-caret-position="-262">
+          <caret column="2" lean-forward="true" selection-start-column="2" selection-end-column="2" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/js/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-120">
-          <caret line="11" column="10" lean-forward="true" selection-start-line="6" selection-start-column="27" selection-end-line="11" selection-end-column="10" />
+        <state relative-caret-position="433">
+          <caret line="61" column="13" lean-forward="true" selection-start-line="61" selection-start-column="13" selection-end-line="61" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spotify_to_gpm_app/templates/spotify_to_gpm_app/homepage.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="644">
-          <caret line="59" column="18" lean-forward="true" selection-start-line="59" selection-start-column="18" selection-end-line="59" selection-end-column="18" />
+        <state relative-caret-position="-1959">
+          <caret column="15" lean-forward="true" selection-start-column="15" selection-end-column="15" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spotify_to_gpm_app/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="93" column="16" lean-forward="true" selection-start-line="93" selection-start-column="16" selection-end-line="93" selection-end-column="16" />
+        <state relative-caret-position="433">
+          <caret line="184" column="12" selection-start-line="184" selection-start-column="12" selection-end-line="184" selection-end-column="12" />
           <folding>
             <element signature="e#0#73#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spotify_to_gpm_app/static/spotify_to_gpm_app/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="571">
+          <caret line="260" column="1" lean-forward="true" selection-start-line="260" selection-start-column="1" selection-end-line="260" selection-end-column="1" />
         </state>
       </provider>
     </entry>
