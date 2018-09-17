@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.views.decorators.csrf._EnsureCsrfCookie',
 ]
 
 ROOT_URLCONF = 'spotify_to_gpm_site.urls'

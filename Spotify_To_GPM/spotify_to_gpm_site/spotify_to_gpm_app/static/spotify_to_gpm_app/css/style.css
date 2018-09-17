@@ -99,7 +99,7 @@ html, body {
     background: #ff5722;
 }
 
-.spotify_tracks, .gpm_tracks {
+.spotify_song_list, .gpm_song_list {
     height: 80%;
     /*overflow: scroll;*/
     background: #fff;
@@ -219,10 +219,12 @@ input.login_out {
     font-size: 0.9em;
 }
 
-/*.form_wrap {*/
-    /*display: flex;*/
-    /*justify-content: center;*/
-/*}*/
+#spotify_selectable .ui-selecting, #spotify_selectable .ui-selected {
+    background: #1db955;
+}
+#gpm_selectable .ui-selecting, #gpm_selectable .ui-selected {
+    background: #ff5722;
+}
 
 label {
     display: block;
