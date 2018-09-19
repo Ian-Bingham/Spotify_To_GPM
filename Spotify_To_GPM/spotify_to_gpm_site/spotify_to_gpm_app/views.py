@@ -47,11 +47,8 @@ def gpm_login(request):
     return render(request, 'spotify_to_gpm_app/login_page.html', {'form': form})
 
 
-# delete GPM Library, then log out the user
+# logout of GPM
 def gpm_logout(request):
-    if GPMUser.objects.filter(spotify_user=request.user).exists():
-        gpm_user = GPMUser.objects.get(spotify_user=request.user)
-        gpm_user.delete()
     global gpm
     gpm.logout()
     return redirect(reverse('spotify_to_gpm_app:gpm_login'))
@@ -63,11 +60,8 @@ def spotify_login(request):
     return redirect('social:begin', 'spotify')
 
 
-# delete Spotify Library, then log out the user
+# logout of Spotify
 def spotify_logout(request):
-    if User.objects.filter(username=request.user.username).exists():
-        spot_user = User.objects.get(username=request.user.username)
-        spot_user.delete()
     auth_logout(request)
     return redirect(reverse('spotify_to_gpm_app:index'))
 
@@ -83,16 +77,20 @@ def get_spotify_user(request):
 
 # save the user's songs in their Spotify Library to the database
 def spotify_lib_to_db(request):
-    # create a model for the library if it does not exist
+    # delete the user's existing library
+    if SpotifyLibrary.objects.filter(spotify_user=request.user).exists():
+        spot_lib = SpotifyLibrary.objects.get(spotify_user=request.user)
+        spot_lib.delete()
+
+    # create a model for the library
     sp = get_spotify_user(request)
-    if not SpotifyLibrary.objects.filter(spotify_user=request.user).exists():
-        mylibrary = SpotifyLibrary(library_name=request.user.username, spotify_user=request.user)
-        mylibrary.save()
+    mylibrary = SpotifyLibrary(library_name=request.user.username, spotify_user=request.user)
+    mylibrary.save()
     library = get_object_or_404(SpotifyLibrary, spotify_user=request.user)
 
     # go through the user's list of songs in their Spotify Library and
     # create a track model for each if it does not already exist in the database
-    myoffset = 600
+    myoffset = 0
     while True:
         library_json = sp.current_user_saved_tracks(limit=50, offset=myoffset)
         for item in library_json['items']:
@@ -118,17 +116,21 @@ def spotify_lib_to_db(request):
 
 # save the user's songs in their GPM Library to the database
 def gpm_lib_to_db(request):
-    # create a model for the library if it does not exist
-    if not GPMLibrary.objects.filter(gpm_user=request.user.GPMUser).exists():
-        mylibrary = GPMLibrary(library_name=request.user.GPMUser.email, gpm_user=request.user.GPMUser)
-        mylibrary.save()
+    # delete the user's existing library
+    if GPMLibrary.objects.filter(gpm_user=request.user.GPMUser).exists():
+        gpm_lib = GPMLibrary.objects.get(gpm_user=request.user.GPMUser)
+        gpm_lib.delete()
+
+    # create a model for the library
+    mylibrary = GPMLibrary(library_name=request.user.GPMUser.email, gpm_user=request.user.GPMUser)
+    mylibrary.save()
     library = get_object_or_404(GPMLibrary, gpm_user=request.user.GPMUser)
 
     # go through the user's list of songs in their GPM Library and
     # create a track model for each if it does not already exist in the database
     global gpm
     gpm_tracks = gpm.get_all_songs()
-    for track in gpm_tracks[:50]:
+    for track in gpm_tracks:
         if not GPMTrack.objects.filter(store_id=track['storeId']).exists():
             new_gpm_track = GPMTrack(track_name=track['title'],
                                      artist_name=track['artist'],
@@ -145,11 +147,10 @@ def gpm_lib_to_db(request):
     return library
 
 
+# import songs from both Spotify and GPM into the database
 def import_songs_to_db(request):
     spotify_lib = spotify_lib_to_db(request)
     gpm_lib = gpm_lib_to_db(request)
-    # spotify_lib = SpotifyLibrary.objects.get(spotify_user=request.user)
-    # gpm_lib = GPMLibrary.objects.get(gpm_user=request.user.GPMUser)
     spotify_tracks = SpotifyTrack.objects.filter(library=spotify_lib)
     gpm_tracks = GPMTrack.objects.filter(library=gpm_lib)
     return render(request, 'spotify_to_gpm_app/homepage.html', {'spotify_tracks': spotify_tracks,
@@ -163,7 +164,9 @@ def gpm_to_spotify(request):
     gpm_tracks_added = []
     gpm_tracks_not_added = []
 
+    # check to see if a POST ajax request was made
     if request.method == 'POST':
+        # get the list of gpm tracks
         gpm_track_list = request.POST.get('gpm_track_list', False)
         gpm_track_list = json.loads(gpm_track_list)
 
@@ -182,7 +185,8 @@ def gpm_to_spotify(request):
             else:
                 gpm_tracks_not_added.append(track)
 
-            return JsonResponse({'gpm_tracks_added': gpm_tracks_added, 'gpm_tracks_not_added': gpm_tracks_not_added, })
+        # return JSON to our Javascript Ajax call for further processing
+        return JsonResponse({'gpm_tracks_added': gpm_tracks_added, 'gpm_tracks_not_added': gpm_tracks_not_added,})
 
 
 # searches Spotify for a song with the given name, artist, and album
@@ -211,7 +215,9 @@ def spotify_to_gpm(request):
     spotify_tracks_added = []
     spotify_tracks_not_added = []
 
+    # check to see if a POST ajax request was made
     if request.method == 'POST':
+        # get the list of Spotify tracks
         spotify_track_list = request.POST.get('spotify_track_list', False)
         spotify_track_list = json.loads(spotify_track_list)
 
@@ -231,6 +237,7 @@ def spotify_to_gpm(request):
             else:
                 spotify_tracks_not_added.append(track)
 
+        # return JSON to our Javascript Ajax call for further processing
         return JsonResponse({'spotify_tracks_added': spotify_tracks_added, 'spotify_tracks_not_added': spotify_tracks_not_added,})
 
 

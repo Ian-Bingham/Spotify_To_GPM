@@ -12,24 +12,16 @@
 <div class="overall_wrapper">
     <header class="import_links">
         <h1>Welcome to Spotify To GPM!!!</h1>
-        {#    <p> <a href="{% url 'spotify_to_gpm_app:spotify_lib_to_db' %}">Import Spotify To Database</a> </p>#}
-        {#    <p> <a href="{% url 'spotify_to_gpm_app:gpm_lib_to_db' %}">Import GPM To Database</a> </p>#}
-        {#        <p><a href="{% url 'spotify_to_gpm_app:import_songs_to_db' %}">Import#}
-        {#            Spotify and GPM Songs</a></p>#}
-
-
-        <p><a href="{% url 'spotify_to_gpm_app:import_songs_to_db' %}">Import
-            Songs!</a></p>
+        <a href="{% url 'spotify_to_gpm_app:import_songs_to_db' %}">Import
+            Songs!</a>
     </header>
 
     <main class="songs_tables_wrapper">
         <div class="spotify_window">
             <header class="spotify_header">
                 <h2>Logged into Spotify as {{ user.username }}</h2>
-                <p><a href="{% url 'spotify_to_gpm_app:spotify_to_gpm' %}">Import
-                    All Songs To GPM</a></p>
-                <p><a href="{% url 'spotify_to_gpm_app:spotify_logout' %}">Logout
-                    Of Spotify</a></p>
+                <a href="{% url 'spotify_to_gpm_app:spotify_logout' %}">Logout
+                    Of Spotify</a>
             </header>
             <div class="spotify_song_list">
                 <table class="spotify_table">
@@ -61,10 +53,8 @@
         <div class="gpm_window">
             <header class="gpm_header">
                 <h2>Logged into GPM as {{ user.GPMUser.email }}</h2>
-                <p><a href="{% url 'spotify_to_gpm_app:gpm_to_spotify' %}">Import
-                    All Songs To Spotify</a></p>
-                <p><a href="{% url 'spotify_to_gpm_app:gpm_logout' %}">Logout Of
-                    GPM</a></p>
+                <a href="{% url 'spotify_to_gpm_app:gpm_logout' %}">Logout Of
+                    GPM</a>
             </header>
             <div class="gpm_song_list">
                 <table class="gpm_table">
@@ -78,9 +68,9 @@
                     <tbody>
                     {% for track in gpm_tracks %}
                         <tr id="{{ track.store_id }}" class="gpm_song">
-                            <td>{{ track.track_name }}</td>
-                            <td>{{ track.artist_name }}</td>
-                            <td>{{ track.album_name }}</td>
+                            <td class="gpm_name">{{ track.track_name }}</td>
+                            <td class="gpm_artist">{{ track.artist_name }}</td>
+                            <td class="gpm_album">{{ track.album_name }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -89,38 +79,54 @@
         </div>
     </main>
 
-    <div class="spotify_popup_wrapper" style="display: none">
-        <div class="added_to_spotify">
-            <h3>The following songs were added to your Spotify Library: </h3>
-            <ul></ul>
-        </div>
+    <div class="popup_wrapper" style="display: none">
+        <div>
+            <div class="loader_popup" style="display: none">
+                <h3>Please wait while we import your songs.</h3>
+                <div class="loader_icon"></div>
+            </div>
 
-        <div class="not_added_to_spotify">
-            <h3>The following songs were NOT added to your Spotify Library: </h3>
-            <ul></ul>
+            <div class="songs_popup" style="display: none">
+                <div class="close_popup">X</div>
+
+                <div class="added_songs">
+                    <h3></h3>
+                    <table class="popup_table_added">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Artist</th>
+                            <th>Album</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="not_added_songs">
+                    <h3></h3>
+                    <table class="popup_table_not_added">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Artist</th>
+                            <th>Album</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="gpm_popup_wrapper" style="display: none">
-        <div class="added_to_gpm">
-            <h3>The following songs were added to your GPM Library: </h3>
-            <ul></ul>
-        </div>
-
-        <div class="not_added_to_gpm">
-            <h3>The following songs were NOT added to your GPM Library: </h3>
-            <ul></ul>
-        </div>
-    </div>
-<script
-        src="https://code.jquery.com/jquery-3.3.1.min.js"
-        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
-<script
-        src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-        crossorigin="anonymous"></script>
-<script src="{% static "spotify_to_gpm_app/js/app.js" %}?{% now "U" %}"></script>
-<script src="{% static "spotify_to_gpm_app/js/multiselect.js" %}?{% now "U" %}"></script>
+</div>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script src="{% static "spotify_to_gpm_app/js/app.js" %}?{% now "U" %}"></script>
+    <script src="{% static "spotify_to_gpm_app/js/multiselect.js" %}?{% now "U" %}"></script>
 </body>
 </html>

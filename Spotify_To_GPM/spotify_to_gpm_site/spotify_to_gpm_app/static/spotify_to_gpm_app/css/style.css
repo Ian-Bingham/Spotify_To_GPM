@@ -78,7 +78,6 @@ html, body {
 .spotify_window, .gpm_window {
     width: 45%;
     height: 70vh;
-    /*box-shadow: 1px 1px 5px 1px #e6e6e6;*/
     box-shadow: 0 8px 5px 1px #dadada;
 }
 
@@ -101,7 +100,6 @@ html, body {
 
 .spotify_song_list, .gpm_song_list {
     height: 80%;
-    /*overflow: scroll;*/
     background: #fff;
     padding: 10px;
 }
@@ -230,28 +228,90 @@ label {
     display: block;
 }
 
-.spotify_popup_wrapper {
+.popup_wrapper {
     position: fixed;
     z-index: 1;
-    background: red;
-    color: white;
+    background: #5d5d5d87;
     padding: 20px;
-
-    width: 80vw;
-    height: 80vh;
-    top: 50%;
-    left: 50%;
+    width: 100vw;
+    height: 100vh;
 }
 
-.gpm_popup_wrapper {
-    position: fixed;
-    z-index: 1;
-    background: red;
-    color: white;
-    padding: 20px;
+table.popup_table_added, table.popup_table_not_added {
+    height: 90%;
+    padding: 10px 0;
+}
 
-    width: 80vw;
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, .5);
+  -webkit-box-shadow: 0 0 1px rgba(158, 158, 158, 0.79);
+}
+
+.popup_wrapper > div {
     height: 80vh;
+    width: 80vw;
+    margin: auto;
+    background: #fff;
+    padding: 15px;
+    position: fixed;
     top: 10%;
     left: 10%;
+    border-radius: 5px;
+    box-shadow: 2px 2px 3px #0000002e;
+}
+
+.added_songs, .not_added_songs {
+    width: 100%;
+    height: 45%;
+}
+
+.added_songs ul, .not_added_songs ul {
+    width: 90%;
+    height: 85%;
+    overflow-y: auto;
+}
+
+.close_popup {
+    position: absolute;
+    display: block;
+    color: #000000;
+    right: 2%;
+    top: 2%;
+}
+
+.close_popup:hover {
+    cursor: auto;
+    color: gray;
+}
+
+.loader_popup, .songs_popup {
+    width: 100%;
+    height: 100%;
+}
+
+.loader_popup {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
+
+.loader_icon {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
