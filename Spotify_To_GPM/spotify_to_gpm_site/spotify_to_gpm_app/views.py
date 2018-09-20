@@ -49,6 +49,10 @@ def gpm_login(request):
 
 # logout of GPM
 def gpm_logout(request):
+    if GPMUser.objects.filter(spotify_user=request.user).exists():
+        gpm_user = GPMUser.objects.get(spotify_user=request.user)
+        gpm_user.delete()
+
     global gpm
     gpm.logout()
     return redirect(reverse('spotify_to_gpm_app:gpm_login'))
@@ -62,6 +66,10 @@ def spotify_login(request):
 
 # logout of Spotify
 def spotify_logout(request):
+    if User.objects.filter(username=request.user.username).exists():
+        spot_user = User.objects.get(username=request.user.username)
+        spot_user.delete()
+
     auth_logout(request)
     return redirect(reverse('spotify_to_gpm_app:index'))
 
@@ -173,9 +181,9 @@ def gpm_to_spotify(request):
         # search Spotify for each GPM track,
         # add track to Spotify Library if it does not already exist
         for track in gpm_track_list:
-            name = ''.join(e for e in track['name'] if e.isalnum() or e == " ")
-            artist = ''.join(e for e in track['artist'] if e.isalnum() or e == " ")
-            album = ''.join(e for e in track['album'] if e.isalnum() or e == " ")
+            name = track['name']
+            artist = track['artist']
+            album = track['album']
             tmp = search_spotify(request, sp, name, artist, album)
             if tmp is not None:
                 # add the track to the Spotify Library if it does not already exist
@@ -193,20 +201,42 @@ def gpm_to_spotify(request):
 def search_spotify(request, sp, name, artist, album):
     q = f"{name} artist: {artist} album: {album}".lower()
     search_results = sp.search(q, limit=50)['tracks']['items']
+
     if not search_results:
         return None
     else:
         # check the search results track name against the GPM track name
         # (excluding special chars) if the names match, then we found the song we want to add
-        cleaned_gpm_track_name = ''.join(e for e in name if e.isalnum())
+        cleaned_gpm_track_name = ''.join(e for e in name if e.isalnum()).lower()
         for item in search_results:
-            cleaned_searched_name = ''.join(e for e in item['name'] if e.isalnum())
-            if cleaned_gpm_track_name.lower() in cleaned_searched_name.lower() or \
-                    cleaned_searched_name.lower() in cleaned_gpm_track_name.lower():
+            cleaned_searched_name = ''.join(e for e in item['name'] if e.isalnum()).lower()
+            if cleaned_gpm_track_name in cleaned_searched_name or \
+                    cleaned_searched_name in cleaned_gpm_track_name:
                 return item['id']
 
             if search_results.index(item) == len(search_results) - 1:
                 return None
+
+# # searches Spotify for a song with the given name, artist, and album
+# def search_spotify(request, sp, name, artist, album):
+#     q = f"album: {album}".lower()
+#     search_results = sp.search(q, limit=1, type='album')['albums']['items']
+#
+#     param_name = ''.join(e for e in name if e.isalnum() or e == " ").lower()
+#
+#     if not search_results:
+#         return None
+#     else:
+#         album_id = search_results[0]['id']
+#         album_tracks = sp.album_tracks(album_id)['items']
+#         for track in album_tracks:
+#             search_result_name = ''.join(e for e in track['name'] if e.isalnum() or e == " ").lower()
+#             if param_name in search_result_name or search_result_name in param_name:
+#                 return track['id']
+#
+#             if album_tracks.indexe(track) == len(album_tracks) - 1:
+#                 return None
+
 
 
 # imports the songs from GPM and saves them into the Spotify Library
@@ -224,9 +254,9 @@ def spotify_to_gpm(request):
         # search Spotify for each GPM track,
         # add track to Spotify Library if it does not already exist
         for track in spotify_track_list:
-            name = ''.join(e for e in track['name'] if e.isalnum() or e == " ")
-            artist = ''.join(e for e in track['artist'] if e.isalnum() or e == " ")
-            album = ''.join(e for e in track['album'] if e.isalnum() or e == " ")
+            name = track['name']
+            artist = track['artist']
+            album = track['album']
             tmp = search_gpm(request, name, artist, album)
             if tmp is not None:
                 # add the track to the Spotify Library if it does not already exist
@@ -252,11 +282,11 @@ def search_gpm(request, name, artist, album):
     else:
         # check the search results track name against the Spotify track name
         # (excluding special chars) if the names match, then we found the song we want to add
-        cleaned_spotify_name = ''.join(e for e in name if e.isalnum())
+        cleaned_spotify_name = ''.join(e for e in name if e.isalnum()).lower()
         for song in search_results:
-            cleaned_searched_name = ''.join(e for e in song['track']['title'] if e.isalnum())
-            if cleaned_spotify_name.lower() in cleaned_searched_name.lower() or \
-                    cleaned_searched_name.lower() in cleaned_spotify_name.lower():
+            cleaned_searched_name = ''.join(e for e in song['track']['title'] if e.isalnum()).lower()
+            if cleaned_spotify_name in cleaned_searched_name or \
+                    cleaned_searched_name in cleaned_spotify_name:
                 return song['track']['storeId']
 
             if search_results.index(song) == len(search_results) - 1:

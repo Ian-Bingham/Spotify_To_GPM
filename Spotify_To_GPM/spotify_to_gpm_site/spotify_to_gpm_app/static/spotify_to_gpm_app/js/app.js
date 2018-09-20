@@ -2,7 +2,7 @@ $(document).ready(function () {
     // make the tables selectable
     $(".spotify_table").multiSelect({actcls: 'ui-selected'});
     $(".gpm_table").multiSelect({actcls: 'ui-selected'});
-    
+
     // close the popup when they click the X
     $('.close_popup').on('click', function () {
         $(this).parent().parent().parent()[0].style.display = 'none'
