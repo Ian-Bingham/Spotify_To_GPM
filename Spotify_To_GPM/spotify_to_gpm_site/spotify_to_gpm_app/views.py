@@ -98,6 +98,8 @@ def spotify_lib_to_db(request):
 
     # go through the user's list of songs in their Spotify Library and
     # create a track model for each if it does not already exist in the database
+    # myoffset = 5
+    # while myoffset < 50:
     myoffset = 0
     while True:
         library_json = sp.current_user_saved_tracks(limit=50, offset=myoffset)
@@ -197,6 +199,7 @@ def gpm_to_spotify(request):
         return JsonResponse({'gpm_tracks_added': gpm_tracks_added, 'gpm_tracks_not_added': gpm_tracks_not_added,})
 
 
+# FULLY FUNCTIONAL
 # searches Spotify for a song with the given name, artist, and album
 def search_spotify(request, sp, name, artist, album):
     q = f"{name} artist: {artist} album: {album}".lower()
@@ -217,6 +220,8 @@ def search_spotify(request, sp, name, artist, album):
             if search_results.index(item) == len(search_results) - 1:
                 return None
 
+
+# # WORK IN PROGRESS
 # # searches Spotify for a song with the given name, artist, and album
 # def search_spotify(request, sp, name, artist, album):
 #     q = f"album: {album}".lower()
@@ -236,7 +241,6 @@ def search_spotify(request, sp, name, artist, album):
 #
 #             if album_tracks.indexe(track) == len(album_tracks) - 1:
 #                 return None
-
 
 
 # imports the songs from GPM and saves them into the Spotify Library
@@ -271,6 +275,7 @@ def spotify_to_gpm(request):
         return JsonResponse({'spotify_tracks_added': spotify_tracks_added, 'spotify_tracks_not_added': spotify_tracks_not_added,})
 
 
+# FULLY FUNCTIONAL
 # searches Spotify for a song with the given name, artist, and album
 def search_gpm(request, name, artist, album):
     q = f"{name} {artist} {album}".lower()
@@ -291,6 +296,38 @@ def search_gpm(request, name, artist, album):
 
             if search_results.index(song) == len(search_results) - 1:
                 return None
+
+
+# # WORK IN PROGRESS
+# # searches Spotify for a song with the given name, artist, and album
+# def search_gpm(request, name, artist, album):
+#     cleaned_spotify_name = ''.join(e for e in name if e.isalnum() or e == " ").lower()
+#     cleaned_album_name = ''.join(e for e in album if e.isalnum() or e == " ").lower()
+#
+#     q = f"{cleaned_album_name}"
+#     global gpm
+#     search_results = gpm.search(q, max_results=5)['album_hits']
+#
+#     if not search_results:
+#         return None
+#     else:
+#         # check the search results track name against the Spotify track name
+#         # (excluding special chars) if the names match, then we found the song we want to add
+#         for album in search_results:
+#             if album['album']['artist'].lower() in artist.lower() or artist.lower() in album['album']['artist'].lower():
+#                 album_id = album['album']['albumId']
+#                 break
+#
+#             if search_results.index(album) == len(search_results) - 1:
+#                 return None
+#
+#         album_tracks = gpm.get_album_info(album_id)['tracks']
+#         for track in album_tracks:
+#             track_name = ''.join(e for e in track['title'] if e.isalnum() or e == " ").lower()
+#             if track_name in cleaned_spotify_name or cleaned_spotify_name in track_name:
+#                 return track['storeId']
+#
+#         return None
 
 
 
